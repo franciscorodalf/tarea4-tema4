@@ -31,16 +31,16 @@ class FileXmlCriaturaTest {
 
         @Test
         void obtenerCriaturaTest() {
-                String idBuscar = "ID_ACTUALIZAR";
+                String idBuscar = "DG001";
                 Criatura critaturaBuscar = new Criatura(idBuscar);
                 critaturaBuscar = persistencia.obtener(critaturaBuscar);
-                Assertions.assertEquals(critaturaBuscar.getId(), "ID_BUSCAR",
+                Assertions.assertEquals(critaturaBuscar.getId(), "DG001",
                                 MESSAGE_ERROR);
                 Assertions.assertNotNull(critaturaBuscar.getNombre(),
                                 MESSAGE_ERROR);
-                Assertions.assertTrue(critaturaBuscar.getCategoria().equals("VALOR_COMPARAR"),
+                Assertions.assertTrue(critaturaBuscar.getCategoria().equals("Dragones"),
                                 MESSAGE_ERROR);
-                Assertions.assertNotNull(critaturaBuscar.getDescripcion().equals("VALOR_COMPARAR"),
+                Assertions.assertNotNull(critaturaBuscar.getDescripcion().equals("Un imponente dragón que escupe fuego."),
                                 MESSAGE_ERROR);
         }
 

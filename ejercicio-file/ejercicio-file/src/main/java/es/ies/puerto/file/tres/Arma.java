@@ -12,6 +12,10 @@ public class Arma {
     public Arma() {
     }
 
+    public Arma(String id) {
+        this.id = id;
+    }
+
     public Arma(String id, String nombre, String descripcion, String origen, int fuerza) {
         this.id = id;
         this.nombre = nombre;
@@ -78,13 +82,7 @@ public class Arma {
 
     @Override
     public String toString() {
-        return "{" +
-                " id='" + getId() + "'" +
-                ", nombre='" + getNombre() + "'" +
-                ", descripcion='" + getDescripcion() + "'" +
-                ", origen='" + getOrigen() + "'" +
-                ", fuerza='" + getFuerza() + "'" +
-                "}";
+        return getId() + ", " + getNombre() + "," + getDescripcion() + ", " + getOrigen() + "," + getFuerza();
     }
 
 }

@@ -154,7 +154,30 @@ public class FileXmlCriatura {
     }
 
     public void updateCriatura(Criatura criatura) {
+        List<Criatura> criaturas = obtenerCriaturas();
+        boolean encontrada = false;
 
+        for (int i = 0; i < criaturas.size(); i++) {
+            if (criaturas.get(i).getId().equals(criatura.getId())) {
+
+                criaturas.get(i).setNombre(criatura.getNombre());
+                criaturas.get(i).setDescripcion(criatura.getDescripcion());
+                criaturas.get(i).setCategoria(criatura.getCategoria());
+                encontrada = true;
+                break;
+            }
+        }
+
+        if (encontrada) {
+            try {
+                volcarFicheroXml(criaturas);
+                System.out.println("Criatura actualizada exitosamente.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Criatura no encontrada.");
+        }
     }
 
     public static void volcarFicheroXml(List<Criatura> criaturas) throws Exception {
@@ -162,24 +185,24 @@ public class FileXmlCriatura {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.newDocument();
 
-        Element root = doc.createElement("empleados");
+        Element root = doc.createElement("criaturas");
         doc.appendChild(root);
 
         for (Criatura criatura : criaturas) {
-            Element empleadoXml = doc.createElement("empleado");
-            root.appendChild(empleadoXml);
+            Element criaturaXml = doc.createElement("criatura");
+            root.appendChild(criaturaXml);
             Element id = doc.createElement("id");
             id.appendChild(doc.createTextNode(criatura.getId()));
-            empleadoXml.appendChild(id);
+            criaturaXml.appendChild(id);
             Element nombreXml = doc.createElement("nombre");
             nombreXml.appendChild(doc.createTextNode(criatura.getNombre()));
-            empleadoXml.appendChild(nombreXml);
+            criaturaXml.appendChild(nombreXml);
             Element fechaNacimientoXml = doc.createElement("descripcion");
             fechaNacimientoXml.appendChild(doc.createTextNode(criatura.getDescripcion()));
-            empleadoXml.appendChild(fechaNacimientoXml);
+            criaturaXml.appendChild(fechaNacimientoXml);
             Element puestoXml = doc.createElement("categoria");
             puestoXml.appendChild(doc.createTextNode(criatura.getCategoria()));
-            empleadoXml.appendChild(puestoXml);
+            criaturaXml.appendChild(puestoXml);
         }
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
