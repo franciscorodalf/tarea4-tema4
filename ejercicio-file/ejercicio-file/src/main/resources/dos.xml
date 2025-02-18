@@ -1,13 +1,5 @@
-<pokedex>
-    <pokemon>
-        <id>001</id>
-        <nombre>Bulbasaur</nombre>
-        <tipos>
-            <tipo>Planta</tipo>
-            <tipo>Veneno</tipo>
-        </tipos>
-        <descripcion>Un pequeño Pokémon con una semilla en su espalda que crece a medida que el Pokémon se desarrolla.</descripcion>
-    </pokemon>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<criaturas>
     <pokemon>
         <id>002</id>
         <nombre>Charmander</nombre>
@@ -39,6 +31,26 @@
             <tipo>Normal</tipo>
             <tipo>Hada</tipo>
         </tipos>
-        <descripcion>Un Pokémon redondo que canta una dulce canción que puede hacer dormir a cualquiera.</descripcion>
+        <descripcion>Un Pokémon redondo que canta una dulce canción que puede hacer dormir a
+            cualquiera.</descripcion>
     </pokemon>
-</pokedex>
+    <pokemon>
+        <id>001</id>
+        <nombre>Bulbasaur</nombre>
+        <tipos>
+            <tipo>Planta</tipo>
+            <tipo>Veneno</tipo>
+        </tipos>
+        <descripcion>Un pequeño Pokémon con una semilla en su espalda que crece a medida que el
+            Pokémon se desarrolla.</descripcion>
+    </pokemon>
+    <pokemon>
+        <id>123</id>
+        <nombre>ibfabf</nombre>
+        <tipos>
+            <tipo>fuego</tipo>
+            <tipo>planta</tipo>
+        </tipos>
+        <descripcion>descripcion</descripcion>
+    </pokemon>
+</criaturas>

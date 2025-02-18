@@ -13,6 +13,9 @@ public class Pokemon {
     public Pokemon() {
     }
 
+    public Pokemon(String id){
+        this.id = id;
+    }
     public Pokemon(String id, String nombre, List<String> tipos, String descripcion) {
         this.id = id;
         this.nombre = nombre;
@@ -52,6 +55,26 @@ public class Pokemon {
         this.descripcion = descripcion;
     }
 
+    public Pokemon id(String id) {
+        setId(id);
+        return this;
+    }
+
+    public Pokemon nombre(String nombre) {
+        setNombre(nombre);
+        return this;
+    }
+
+    public Pokemon tipos(List<String> tipos) {
+        setTipos(tipos);
+        return this;
+    }
+
+    public Pokemon descripcion(String descripcion) {
+        setDescripcion(descripcion);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -70,8 +93,10 @@ public class Pokemon {
 
     @Override
     public String toString() {
-        return getId() + "," + getNombre() + ", " +
-                getTipos() + ", " + getDescripcion();
+        return getId() + ", " +
+                getNombre() + ", " +
+                getTipos() + ", " +
+                getDescripcion();
     }
 
 }

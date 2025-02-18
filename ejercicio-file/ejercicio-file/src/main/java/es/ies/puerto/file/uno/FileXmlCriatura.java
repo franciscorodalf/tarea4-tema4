@@ -20,7 +20,6 @@ public class FileXmlCriatura {
     List<Criatura> criaturasFile;
 
     public FileXmlCriatura(){
-        criaturasFile = obtenerCriaturas();
     }
 
     public List<Criatura> obtenerCriaturas() {
