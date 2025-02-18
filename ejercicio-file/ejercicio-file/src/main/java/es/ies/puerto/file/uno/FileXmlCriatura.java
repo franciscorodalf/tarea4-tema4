@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -18,11 +17,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class FileXmlCriatura {
+    List<Criatura> criaturasFile;
 
-    static List<Criatura> criaturas = new ArrayList<>();
+    public FileXmlCriatura(){
+        criaturasFile = obtenerCriaturas();
+    }
 
     public List<Criatura> obtenerCriaturas() {
         try {
+            List<Criatura> criaturas = new ArrayList<>();
             File archivo = new File("src/main/resources/uno.xml");
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -41,107 +44,51 @@ public class FileXmlCriatura {
                     criaturas.add(criatura);
                 }
             }
+            return criaturas;
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }
-        return criaturas;
     }
 
     public Criatura obtener(Criatura criatura) {
 
-        try {
-            File file = new File("src/main/resources/uno.xml");
-            if (!file.exists()) {
-                System.out.println("El archivo XML no existe.");
-                return null;
-            }
-
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(file);
-            doc.getDocumentElement().normalize();
-
-            NodeList listaCriaturas = doc.getElementsByTagName("criatura");
-
-            for (int i = 0; i < listaCriaturas.getLength(); i++) {
-                Node nodo = listaCriaturas.item(i);
-                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elemento = (Element) nodo;
-
-                    String id = elemento.getAttribute("id");
-
-                    if (id.equals(criatura.getId())) {
-                        String nombre = elemento.getElementsByTagName("nombre").item(0).getTextContent();
-                        String descripcion = elemento.getElementsByTagName("descripcion").item(0).getTextContent();
-                        String categoria = elemento.getElementsByTagName("categoria").item(0).getTextContent();
-
-                        return new Criatura(id, nombre, descripcion, categoria);
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        File file = new File("src/main/resources/uno.xml");
+        if (!file.exists()) {
+            throw new IllegalArgumentException("El archivo xml no existe");
         }
+        List<Criatura> criaturas = obtenerCriaturas();
+        int posicionCriatura = criaturas.indexOf(criatura);
+        if (posicionCriatura < 0) {
+            throw new IllegalArgumentException("La criatura no existe");
+        }
+        return criaturas.get(posicionCriatura);
 
-        System.out.println("Criatura no encontrada.");
-        return null;
     }
 
-    public void addCriatura(Criatura criatura) {
-        try {
-            File file = new File("src/main/resources/uno.xml");
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc;
+    public void addCriatura(Criatura criatura) throws Exception {
 
-            if (file.exists()) {
-                doc = dBuilder.parse(file);
-                doc.getDocumentElement().normalize();
-            } else {
-                doc = dBuilder.newDocument();
-                Element rootElement = doc.createElement("criaturas");
-                doc.appendChild(rootElement);
-            }
-
-            Element root = doc.getDocumentElement();
-            Element criaturaElement = doc.createElement("criatura");
-
-            criaturaElement.setAttribute("id", String.valueOf(criatura.getId()));
-
-            Element nombre = doc.createElement("nombre");
-            nombre.appendChild(doc.createTextNode(criatura.getNombre()));
-            criaturaElement.appendChild(nombre);
-
-            Element descripcion = doc.createElement("descripcion");
-            descripcion.appendChild(doc.createTextNode(criatura.getDescripcion()));
-            criaturaElement.appendChild(descripcion);
-
-            Element categoria = doc.createElement("categoria");
-            categoria.appendChild(doc.createTextNode(criatura.getCategoria()));
-            criaturaElement.appendChild(categoria);
-
-            root.appendChild(criaturaElement);
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(file);
-            transformer.transform(source, result);
-
-            System.out.println("Criatura añadida exitosamente.");
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException();
+        if (criatura == null || criatura.getId() == null || criatura.getId().isEmpty()) {
+            return;
         }
+        List<Criatura> criaturas = obtenerCriaturas();
+        if (criaturas.contains(criatura)) {
+            return;
+        }
+
+        criaturas.add(criatura);
+        volcarFicheroXml(criaturas);
     }
 
-    public boolean deleteCriatura(Criatura criatura, List<Criatura> criaturas) {
+    public boolean deleteCriatura(Criatura criatura) {
+        if (criatura == null || criatura.getId() == null || criatura.getId().isEmpty()) {
+            return false;
+        }
+        List<Criatura> criaturas = obtenerCriaturas();
+        if (!criaturas.contains(criatura)) {
+            return false;
+        }
+
         try {
-            if (criatura == null) {
-                return false;
-            }
             boolean eliminado = criaturas.remove(criatura);
 
             if (eliminado) {
@@ -154,30 +101,24 @@ public class FileXmlCriatura {
     }
 
     public void updateCriatura(Criatura criatura) {
+        if (criatura == null || criatura.getId() == null || criatura.getId().isEmpty()) {
+            return;
+        }
         List<Criatura> criaturas = obtenerCriaturas();
-        boolean encontrada = false;
-
-        for (int i = 0; i < criaturas.size(); i++) {
-            if (criaturas.get(i).getId().equals(criatura.getId())) {
-
-                criaturas.get(i).setNombre(criatura.getNombre());
-                criaturas.get(i).setDescripcion(criatura.getDescripcion());
-                criaturas.get(i).setCategoria(criatura.getCategoria());
-                encontrada = true;
-                break;
-            }
+        if (!criaturas.contains(criatura)) {
+            return;
         }
 
-        if (encontrada) {
-            try {
-                volcarFicheroXml(criaturas);
-                System.out.println("Criatura actualizada exitosamente.");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Criatura no encontrada.");
+        criaturas.remove(criatura);
+        criaturas.add(criatura);
+
+
+        try {
+            volcarFicheroXml(criaturas);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public static void volcarFicheroXml(List<Criatura> criaturas) throws Exception {
@@ -189,17 +130,22 @@ public class FileXmlCriatura {
         doc.appendChild(root);
 
         for (Criatura criatura : criaturas) {
+
             Element criaturaXml = doc.createElement("criatura");
             root.appendChild(criaturaXml);
+
             Element id = doc.createElement("id");
             id.appendChild(doc.createTextNode(criatura.getId()));
             criaturaXml.appendChild(id);
+
             Element nombreXml = doc.createElement("nombre");
             nombreXml.appendChild(doc.createTextNode(criatura.getNombre()));
             criaturaXml.appendChild(nombreXml);
+
             Element fechaNacimientoXml = doc.createElement("descripcion");
             fechaNacimientoXml.appendChild(doc.createTextNode(criatura.getDescripcion()));
             criaturaXml.appendChild(fechaNacimientoXml);
+
             Element puestoXml = doc.createElement("categoria");
             puestoXml.appendChild(doc.createTextNode(criatura.getCategoria()));
             criaturaXml.appendChild(puestoXml);
@@ -208,7 +154,7 @@ public class FileXmlCriatura {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File("src/main/resources/empleados2.xml"));
+        StreamResult result = new StreamResult(new File("src/main/resources/uno.xml"));
         transformer.transform(source, result);
     }
 }

@@ -15,7 +15,7 @@ class FileXmlCriaturaTest {
         List<Criatura> criaturas;
 
         @BeforeEach
-        void beforeEach() {
+        void beforeEach() throws Exception{
                 persistencia = new FileXmlCriatura();
                 criaturas = persistencia.obtenerCriaturas();
                 criatura = new Criatura();
@@ -45,10 +45,10 @@ class FileXmlCriaturaTest {
         }
 
         @Test
-        void addDeleteCriaturaTest() {
+        void addDeleteCriaturaTest() throws Exception {
 
                 int numCriaturasInicial = criaturas.size();
-                Criatura criaturaInsertar = new Criatura();
+                Criatura criaturaInsertar = new Criatura("1234","Lagarto","tiene cola","animal");
 
                 persistencia.addCriatura(criaturaInsertar);
                 criaturas = persistencia.obtenerCriaturas();
@@ -57,7 +57,7 @@ class FileXmlCriaturaTest {
                                 MESSAGE_ERROR);
                 Assertions.assertEquals(numCriaturasInicial + 1,
                                 numCriaturasInsertar, MESSAGE_ERROR);
-                persistencia.deleteCriatura(criaturaInsertar, criaturas);
+                persistencia.deleteCriatura(criaturaInsertar);
                 criaturas = persistencia.obtenerCriaturas();
                 int numCritaturasBorrado = criaturas.size();
                 Assertions.assertEquals(numCriaturasInicial,
@@ -67,13 +67,13 @@ class FileXmlCriaturaTest {
 
         @Test
         void actualizarCriatura() {
-                String idActualizar = "ID_ACTUALIZAR";
+                String idActualizar = "DG001";
                 Criatura CriaturaBuscar = new Criatura(idActualizar);
                 Criatura CriaturaActualizar = persistencia.obtener(CriaturaBuscar);
                 Criatura CriaturaBackup = persistencia.obtener(CriaturaBuscar);
-                CriaturaActualizar.setNombre("nombreActualizar");
-                CriaturaActualizar.setDescripcion("edadActualizar");
-                CriaturaActualizar.setCategoria("emailActualizar");
+                CriaturaActualizar.setNombre("Dragon de hielo");
+                CriaturaActualizar.setDescripcion("Un imponente dragón que escupe hielo.");
+                CriaturaActualizar.setCategoria("Dragones");
                 persistencia.updateCriatura(CriaturaActualizar);
 
                 CriaturaBuscar = persistencia.obtener(CriaturaBuscar);
